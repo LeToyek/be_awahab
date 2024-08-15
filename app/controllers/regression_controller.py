@@ -7,6 +7,10 @@ regression_bp = Blueprint('regression', __name__)
 # Create an instance of RegressionService
 regression_service = RegressionService()
 
+@regression_bp.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Regression API'})
+
 @regression_bp.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files:
