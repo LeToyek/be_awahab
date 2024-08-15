@@ -21,10 +21,6 @@ class RegressionService:
     def predict_from_file(self, file):
         df = read_file(file)
         
-        # Ensure that 'X' and 'y' columns are present
-        if 'X' not in df.columns or 'y' not in df.columns:
-            raise ValueError('CSV/XLSX file must contain "X" and "y" columns.')
-
         preprocessed =  preprocess_data(df)
         
         df_ti = get_specific_df(preprocessed,'TI')

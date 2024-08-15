@@ -34,7 +34,7 @@ def read_file(file):
     - df: Pandas DataFrame containing the data
     """
     if file.filename.endswith('.csv'):
-        df = pd.read_csv(file)
+        df = pd.read_csv(file, sep=';')
     elif file.filename.endswith('.xlsx'):
         df = pd.read_excel(file)
     else:
