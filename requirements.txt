@@ -1,0 +1,12 @@
+numpy
+pandas
+seaborn
+matplotlib
+dataprep
+scikit-learn
+openpyxl
+dataprep
+pip
+autopep8
+Flask==2.3.0
+
