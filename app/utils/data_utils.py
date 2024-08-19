@@ -18,6 +18,7 @@ def preprocess_data(df):
 def determine_target(df,target):
     x=df.drop(columns=[target])
     y=df[target]
+    
     return x,y
 
 def get_specific_df(df,section):

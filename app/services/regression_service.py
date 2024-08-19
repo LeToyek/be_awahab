@@ -34,14 +34,24 @@ class RegressionService:
     def get_predicted_data(self,df,target):
         x,y = determine_target(df,target)
         X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+        
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
+
         self.model.fit(X_train_scaled, y_train)
         predictions = self.model.predict(X_test_scaled)
+        rounded_predictions = [round(p) for p in predictions]
+
+        feature_names = x.columns
+        target_name = y.name
+        coef = self.model.coef_
+        intercept = self.model.intercept_
+
+        
+
         r2 = r2_score(y_test, predictions)
         mse = mean_squared_error(y_test, predictions)
         mae = mean_absolute_error(y_test, predictions)
-        rounded_predictions = [round(p) for p in predictions]
         return {
             'r2': r2,
             'mse': mse,
@@ -49,6 +59,7 @@ class RegressionService:
             'predictions': rounded_predictions,
             'actual': y_test.tolist()
         }
+    
     
         
         
