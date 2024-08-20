@@ -46,8 +46,10 @@ class RegressionService:
         target_name = y.name
         coef = self.model.coef_
         intercept = self.model.intercept_
-
         
+        # merge the features and coef into a dictionary
+        coef_list = dict(zip(feature_names, coef.tolist()))
+        df_json = df.to_json(orient='records')
 
         r2 = r2_score(y_test, predictions)
         mse = mean_squared_error(y_test, predictions)
@@ -57,7 +59,12 @@ class RegressionService:
             'mse': mse,
             'mae': mae,
             'predictions': rounded_predictions,
-            'actual': y_test.tolist()
+            'actual': y_test.tolist(),
+            'features': feature_names.tolist(),
+            'target': target_name,
+            'coef_list': coef_list,
+            'intercept': intercept,
+            'df': df_json
         }
     
     

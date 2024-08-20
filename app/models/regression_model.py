@@ -9,3 +9,13 @@ class RegressionModel:
     
     def predict(self, X):
         return self.model.predict(X)
+    
+    @property
+    def coef_(self):
+        return self.model.coef_
+    
+    @property
+    def intercept_(self):
+        return self.model.intercept_
+    
+    
