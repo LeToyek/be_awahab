@@ -9,14 +9,14 @@ def validate_data(data):
         return False
 
 def preprocess_data(df):
-    df.rename(columns={'Unnamed: 0': 'year'}, inplace=True)
+    df.rename(columns={'Tahun': 'year'}, inplace=True)
     df.set_index('year', inplace=True)
     df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
     df = df.round(0).astype(int)
     return df
 
-def determine_target(df,target):
-    x=df.drop(columns=[target])
+def determine_target(df,target,xes):
+    x=df[xes]
     y=df[target]
     
     return x,y
@@ -24,7 +24,7 @@ def determine_target(df,target):
 def get_specific_df(df,section):
     return df.filter(regex=section)
     
-def read_file(file):
+def read_file(file, sheet_name='data_import'):
     """
     Reads a file (CSV or XLSX) into a Pandas DataFrame.
 
@@ -37,7 +37,7 @@ def read_file(file):
     if file.filename.endswith('.csv'):
         df = pd.read_csv(file, sep=';')
     elif file.filename.endswith('.xlsx'):
-        df = pd.read_excel(file)
+        df = pd.read_excel(file,sheet_name=sheet_name)
     else:
         raise ValueError('Unsupported file format. Please upload a CSV or XLSX file.')
     

@@ -23,11 +23,42 @@ def predict():
     
     try:
         # Perform prediction from the file
-        res_ti,res_si = regression_service.predict_from_file(file)
+        res_ti = regression_service.predict_from_file(file)
         json = {
             'TI': res_ti,
-            'SI': res_si
         }
         return jsonify(json)
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
+    
+@regression_bp.route('/budgets', methods=['POST'])
+def get_budgets():
+    if 'file' not in request.files:
+        return jsonify({
+            'status_code': 400,
+            'message': 'No file provided',
+            'data': None}), 400
+    
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify(
+            {'status_code': 400,
+             'message': 'No selected file',
+             'data': None}), 400
+    
+    try:
+        # Perform prediction from the file
+        res_ti = regression_service.get_raw_budget(file)
+        json = {
+            'status_code': 200,
+            'message': 'Success',
+            'data': res_ti
+        }
+        return jsonify(json)
+    except ValueError as e:
+        return jsonify({
+            'status_code': 400,
+            'message': str(e),
+            'data': None}), 400
+    

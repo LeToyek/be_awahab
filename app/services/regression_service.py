@@ -17,22 +17,17 @@ class RegressionService:
         self.model.fit(X, y)
         return self.model.predict(X)
     
-    
     def predict_from_file(self, file):
         df = read_file(file)
         
         preprocessed =  preprocess_data(df)
         
-        df_ti = get_specific_df(preprocessed,'TI')
-        df_si = get_specific_df(preprocessed,'SI')
+        res_ti = self.get_predicted_data(df=preprocessed,target='DU_TI',xes=['P_TI','IU_TI'])
         
-        res_ti = self.get_predicted_data(df_ti,'Jml_Mhs_TI')
-        res_si = self.get_predicted_data(df_si,'Jml_Mhs_SI')
-        
-        return res_ti,res_si
+        return res_ti
     
-    def get_predicted_data(self,df,target):
-        x,y = determine_target(df,target)
+    def get_predicted_data(self,df,target,xes):
+        x,y = determine_target(df,target,xes)
         X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
         
         X_train_scaled = self.scaler.fit_transform(X_train)
@@ -49,6 +44,7 @@ class RegressionService:
         
         # merge the features and coef into a dictionary
         coef_list = dict(zip(feature_names, coef.tolist()))
+        df.reset_index(inplace=True)
         df_json = df.to_json(orient='records')
 
         r2 = r2_score(y_test, predictions)
@@ -66,6 +62,18 @@ class RegressionService:
             'intercept': intercept,
             'df': df_json
         }
+    
+    def get_raw_budget(self,file):
+        df = read_file(file,sheet_name='budgets')
+        cleaned = self.clean_budget(df)
+        json_df = cleaned.to_json(orient='records')
+        return json_df
+    
+    def clean_budget(self,df):
+        df_budget = df.copy()
+        df_budget.rename(columns={'Tahun': 'Year'}, inplace=True)
+        return df_budget
+    
     
     
         
